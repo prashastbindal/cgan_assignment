@@ -123,8 +123,6 @@ def save_gen_images(epoch, generator_model, z_size, y_size):
 
 	gen_images = generator_model.predict([z, sampled_y])
 
-	# gen_images = (gen_images + 1) * 2
-
 	figure = get_plot_figure(nos_distribution, gen_images, sampled_y)
 
 	figure.savefig("sigmoid-result/%d.png" % epoch)
