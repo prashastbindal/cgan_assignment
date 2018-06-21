@@ -97,11 +97,6 @@ def get_cgan_model(generator_model, discriminator_model, z_size, y_size):
 	return Model([z, y], is_real_image)
 
 
-def sample_spherical( npoints, ndim=3):
-        vec = np.random.randn(ndim, npoints)
-        vec /= np.linalg.norm(vec, axis=0)
-        return vec.T
-
 
 
 def get_plot_figure(nos_distribution, gen_images, digits):
