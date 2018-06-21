@@ -147,7 +147,7 @@ def train_CGAN( batch_size, num_epochs):
 
 	(images_train, y_train), (images_test, y_test) = mnist.load_data()
 	
-	images_train = images_train.astype(np.float32) / 255              ############revert
+	images_train = images_train.astype(np.float32) / 255              
 
 	y_train = np.reshape(y_train, (y_train.shape[0], y_size))
 
