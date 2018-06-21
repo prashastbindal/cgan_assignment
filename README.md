@@ -2,6 +2,7 @@ CGAN Implementation on MNIST dataset
 
 Requirements:
 
+Python==3.6.5
 Keras==2.2.0<br />
 numpy==1.14.3<br />
 matplotlib==2.2.2<br />
