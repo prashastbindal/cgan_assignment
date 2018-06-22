@@ -4,9 +4,21 @@ from keras.models import Model
 from keras.optimizers import SGD, Adam
 from keras.datasets import mnist
 from keras.layers.advanced_activations import LeakyReLU
+from keras.callbacks import TensorBoard
+import tensorflow as tf
+
 
 import numpy as np
 import matplotlib.pyplot as plt
+
+import shutil
+shutil.rmtree('logs')
+shutil.rmtree('result')
+
+import pathlib
+pathlib.Path('logs').mkdir(exist_ok=True) 
+pathlib.Path('result').mkdir(exist_ok=True) 
+
 
 	
 num_digits = 10
@@ -125,8 +137,9 @@ def save_gen_images(epoch, generator_model, z_size, y_size):
 
 	figure = get_plot_figure(nos_distribution, gen_images, sampled_y)
 
-	figure.savefig("sigmoid-result/%d.png" % epoch)
+	figure.savefig("result/%d.png" % epoch)
 	plt.close()
+
 
 
 def train_CGAN( batch_size, num_epochs):
@@ -144,6 +157,8 @@ def train_CGAN( batch_size, num_epochs):
 	
 	cgan_model = get_cgan_model(generator_model, discriminator_model, z_size, y_size)
 	cgan_model.compile(loss=['binary_crossentropy'], optimizer=optimizer)
+
+	writer = tf.summary.FileWriter("logs/", max_queue=10)
 
 	(images_train, y_train), (images_test, y_test) = mnist.load_data()
 	
@@ -173,14 +188,22 @@ def train_CGAN( batch_size, num_epochs):
 			
 		discriminator_loss = np.add(discriminator_loss_fake, discriminator_loss_real)
 
+		summary = tf.Summary(value=[tf.Summary.Value(tag="discrim_loss", simple_value=discriminator_loss), ])
+		writer.add_summary(summary)
+
 		sampled_y = np.random.randint(0, 10, batch_size).reshape(batch_size, y_size)
 
 		generator_loss = cgan_model.train_on_batch([z_batch, sampled_y], is_real_batch)
+
+		summary = tf.Summary(value=[tf.Summary.Value(tag="generator_loss", simple_value=generator_loss), ])
+		writer.add_summary(summary)
+
 
 		print ("Epoch %d Generator loss: %f Discrim loss: %f" % (epoch, generator_loss, discriminator_loss))
 
 		if epoch % 100 == 0:
 			save_gen_images(epoch, generator_model, z_size, y_size)
+			writer.flush()
 
 
 
