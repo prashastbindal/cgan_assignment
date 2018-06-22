@@ -198,9 +198,6 @@ def train_CGAN( batch_size, num_epochs):
 		summary = tf.Summary(value=[tf.Summary.Value(tag="generator_loss", simple_value=generator_loss), ])
 		writer.add_summary(summary)
 
-
-		print ("Epoch %d Generator loss: %f Discrim loss: %f" % (epoch, generator_loss, discriminator_loss))
-
 		if epoch % 100 == 0:
 			writer.flush()
 			save_gen_images(epoch, generator_model, z_size, y_size)
