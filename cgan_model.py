@@ -28,6 +28,27 @@ image_dim = (28, 28)
 np.random.seed(1234)
 
 
+def get_cgan_model(generator_model, discriminator_model, z_size, y_size):
+	# global discriminator_model
+	# global generator_model
+
+	z = Input(shape = (z_size,))
+	y = Input(shape = (y_size,))
+
+	gen_image = generator_model([z, y])
+
+	discriminator_model.trainable = False
+
+	is_real_image = discriminator_model([gen_image, y])
+
+	model = Model([z, y], is_real_image)
+	model.summary()
+
+	return Model([z, y], is_real_image)
+
+
+
+
 def get_generator_model(z_size, y_size):
 
 	z = Input(shape = (z_size,))
@@ -88,25 +109,6 @@ def get_discriminator_model(y_size):
 	# model.summary()
 
 	return Model([image, y], out)
-
-
-def get_cgan_model(generator_model, discriminator_model, z_size, y_size):
-	# global discriminator_model
-	# global generator_model
-
-	z = Input(shape = (z_size,))
-	y = Input(shape = (y_size,))
-
-	gen_image = generator_model([z, y])
-
-	discriminator_model.trainable = False
-
-	is_real_image = discriminator_model([gen_image, y])
-
-	model = Model([z, y], is_real_image)
-	model.summary()
-
-	return Model([z, y], is_real_image)
 
 
 
