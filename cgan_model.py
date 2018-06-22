@@ -202,8 +202,9 @@ def train_CGAN( batch_size, num_epochs):
 		print ("Epoch %d Generator loss: %f Discrim loss: %f" % (epoch, generator_loss, discriminator_loss))
 
 		if epoch % 100 == 0:
-			save_gen_images(epoch, generator_model, z_size, y_size)
 			writer.flush()
+			save_gen_images(epoch, generator_model, z_size, y_size)
+			
 
 
 
