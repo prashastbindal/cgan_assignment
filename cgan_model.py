@@ -6,23 +6,20 @@ from keras.datasets import mnist
 from keras.layers.advanced_activations import LeakyReLU
 from keras.callbacks import TensorBoard
 import tensorflow as tf
+import os
 
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 import shutil
-shutil.rmtree('logs')
-shutil.rmtree('result')
-
 import pathlib
-pathlib.Path('logs').mkdir(exist_ok=True) 
-pathlib.Path('result').mkdir(exist_ok=True) 
-
 
 	
 num_digits = 10
 image_dim = (28, 28)
+logs_path = 'logs'
+result_path = 'result'
 
 
 np.random.seed(1234)
@@ -139,7 +136,7 @@ def save_gen_images(epoch, generator_model, z_size, y_size):
 
 	figure = get_plot_figure(nos_distribution, gen_images, sampled_y)
 
-	figure.savefig("result/%d.png" % epoch)
+	figure.savefig("%s/%d.png" % (result_path, epoch))
 	plt.close()
 
 
@@ -160,7 +157,7 @@ def train_CGAN( batch_size, num_epochs):
 	cgan_model = get_cgan_model(generator_model, discriminator_model, z_size, y_size)
 	cgan_model.compile(loss=['binary_crossentropy'], optimizer=optimizer)
 
-	writer = tf.summary.FileWriter("logs/", max_queue=10)
+	writer = tf.summary.FileWriter(logs_path, max_queue=10)
 
 	(images_train, y_train), (images_test, y_test) = mnist.load_data()
 	
@@ -208,7 +205,17 @@ def train_CGAN( batch_size, num_epochs):
 
 
 if __name__ == '__main__':
-    train_CGAN(100, 50000)
+	if os.path.exists(logs_path) and os.path.isdir(logs_path):
+		shutil.rmtree(logs_path)
+	
+	if os.path.exists(result_path) and os.path.isdir(result_path):
+		shutil.rmtree(result_path)
+
+
+	pathlib.Path(logs_path).mkdir(exist_ok=True) 
+	pathlib.Path(result_path).mkdir(exist_ok=True) 
+
+	train_CGAN(100, 50000)
 
 
 
