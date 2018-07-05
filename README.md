@@ -1,4 +1,5 @@
-CGAN Implementation on MNIST dataset
+CGAN Implementation on MNIST dataset. 
+Implementation of paper : Conditional Generative Adversarial Nets; by Mehdi Mirza, Simon Osindero
 
 Requirements:
 
